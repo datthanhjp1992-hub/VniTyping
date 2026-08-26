@@ -1,0 +1,414 @@
+/* =========================================================
+   THEME TOKENS
+   Each theme is a full design system: colors, type, radius,
+   shadow and a couple of signature details — not just a
+   palette swap. Switched by [data-theme] on <html>.
+   ========================================================= */
+
+:root{
+  --accent-glow: none;
+  --heading-transform: none;
+}
+
+/* ---------- SEN (Lotus) — default, calm & friendly ---------- */
+[data-theme="sen"]{
+  --bg:#f5f7f6;
+  --paper:#ffffff;
+  --ink:#1c2b33;
+  --line:#d8e0dd;
+  --accent:#1f7a6c;
+  --accent-dark:#155e53;
+  --accent-soft:#e3f1ee;
+  --off:#8a97a3;
+  --danger:#c65b4e;
+
+  --radius-card:16px;
+  --radius-control:999px;
+  --radius-el:10px;
+
+  --font-display:Georgia,"Times New Roman",serif;
+  --font-body:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --font-mono:ui-monospace,Menlo,Consolas,monospace;
+
+  --shadow-card:0 1px 2px rgba(20,40,35,.04), 0 12px 32px -20px rgba(20,40,35,.25);
+  --heading-tracking:-0.01em;
+  --border-w:1.5px;
+}
+
+/* ---------- GIẤY DÓ (mulberry paper & lacquer ink) ---------- */
+[data-theme="giay"]{
+  --bg:#eee5d2;
+  --paper:#faf6ea;
+  --ink:#2b2620;
+  --line:#d8c9a3;
+  --accent:#9c3b2e;
+  --accent-dark:#7a2c22;
+  --accent-soft:#f1ded1;
+  --off:#8c7f68;
+  --danger:#9c3b2e;
+
+  --radius-card:3px;
+  --radius-control:3px;
+  --radius-el:2px;
+
+  --font-display:Georgia,"Times New Roman",serif;
+  --font-body:Georgia,"Times New Roman",serif;
+  --font-mono:ui-monospace,Menlo,Consolas,monospace;
+
+  --shadow-card:0 1px 0 rgba(43,38,32,.08), 0 22px 44px -30px rgba(43,38,32,.45);
+  --heading-tracking:0.01em;
+  --border-w:1px;
+}
+
+/* ---------- MỰC ĐÊM (night ink) — dark, technical ---------- */
+[data-theme="dem"]{
+  --bg:#12161a;
+  --paper:#1a2025;
+  --ink:#e7e4dc;
+  --line:#2b3339;
+  --accent:#c9a24b;
+  --accent-dark:#a9822f;
+  --accent-soft:#2a2718;
+  --off:#7c8790;
+  --danger:#e0725f;
+
+  --radius-card:6px;
+  --radius-control:6px;
+  --radius-el:4px;
+
+  --font-display:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --font-body:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --font-mono:ui-monospace,Menlo,Consolas,monospace;
+
+  --shadow-card:0 1px 0 rgba(0,0,0,.5), 0 24px 60px -34px rgba(0,0,0,.85);
+  --heading-tracking:0.06em;
+  --heading-transform:uppercase;
+  --border-w:1px;
+}
+
+/* ---------- PHỐ NEON (neon night market) — bold, glowing ---------- */
+[data-theme="neon"]{
+  --bg:#1c1030;
+  --paper:#241a3d;
+  --ink:#f4eefc;
+  --line:#3b2b5c;
+  --accent:#ff3d81;
+  --accent-dark:#d81f66;
+  --accent-soft:#33224f;
+  --off:#a794c9;
+  --danger:#ff3d81;
+
+  --radius-card:24px;
+  --radius-control:999px;
+  --radius-el:14px;
+
+  --font-display:"Arial Black","Helvetica Neue",Arial,sans-serif;
+  --font-body:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --font-mono:ui-monospace,Menlo,Consolas,monospace;
+
+  --shadow-card:0 0 0 1px rgba(255,61,129,.18), 0 24px 70px -22px rgba(255,61,129,.5);
+  --heading-tracking:-0.02em;
+  --border-w:2px;
+  --accent-glow:0 0 16px rgba(255,61,129,.6);
+}
+
+/* =========================================================
+   BASE LAYOUT
+   ========================================================= */
+*{box-sizing:border-box;}
+
+html,body{height:100%;}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  min-height:100vh;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding:36px 16px;
+  font-family:var(--font-body);
+  transition:background .25s ease, color .25s ease;
+}
+
+.card{
+  width:70vw;
+  background:var(--paper);
+  border:var(--border-w) solid var(--line);
+  border-radius:var(--radius-card);
+  padding:28px 28px 22px;
+  box-shadow:var(--shadow-card);
+  transition:background .25s ease, border-color .25s ease, box-shadow .25s ease, border-radius .25s ease;
+}
+
+header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  margin-bottom:18px;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.title-block{display:flex; flex-direction:column; gap:4px;}
+
+h1{
+  font-family:var(--font-display);
+  font-size:26px;
+  margin:0;
+  letter-spacing:var(--heading-tracking);
+  text-transform:var(--heading-transform);
+  color:var(--ink);
+}
+
+.sub{
+  font-size:12.5px;
+  color:var(--off);
+  letter-spacing:0.02em;
+}
+
+/* ---------- Giấy Dó signature: a seal-red rule beside the title ---------- */
+[data-theme="giay"] .title-block{
+  border-left:3px solid var(--accent);
+  padding-left:12px;
+}
+
+/* ---------- Mực Đêm signature: mono uppercase, dim caption ---------- */
+[data-theme="dem"] .sub{
+  font-family:var(--font-mono);
+  font-size:11px;
+}
+
+/* ---------- Phố Neon signature: glowing title ---------- */
+[data-theme="neon"] h1{
+  text-shadow:0 0 18px rgba(255,61,129,.45);
+}
+
+textarea{
+  width:100%;
+  min-height:300px;
+  resize:vertical;
+  border:var(--border-w) solid var(--line);
+  border-radius:var(--radius-el);
+  padding:16px 18px;
+  font-size:16px;
+  line-height:1.6;
+  color:var(--ink);
+  background:var(--bg);
+  outline:none;
+  transition:border-color .15s ease, box-shadow .15s ease, background .25s ease, border-radius .25s ease;
+  font-family:var(--font-body);
+}
+[data-theme="giay"] textarea{ background:var(--paper); }
+
+textarea:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-soft), var(--accent-glow);
+}
+
+.row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:14px;
+}
+
+.seg{
+  display:inline-flex;
+  border:var(--border-w) solid var(--line);
+  border-radius:var(--radius-control);
+  padding:3px;
+  background:var(--paper);
+  transition:border-radius .25s ease;
+}
+.seg button{
+  border:none;
+  background:transparent;
+  padding:7px 16px;
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:0.03em;
+  border-radius:var(--radius-control);
+  cursor:pointer;
+  color:var(--off);
+  font-family:var(--font-body);
+  transition:background .15s ease, color .15s ease;
+}
+[data-theme="dem"] .seg button{ font-family:var(--font-mono); }
+.seg button.active{
+  background:var(--accent);
+  color:#fff;
+  box-shadow:var(--accent-glow);
+}
+.seg button.active.is-off{ background:var(--off); box-shadow:none; }
+
+.tools{display:flex; gap:8px; flex-wrap:wrap;}
+
+.btn{
+  border:var(--border-w) solid var(--line);
+  background:var(--paper);
+  color:var(--ink);
+  padding:8px 14px;
+  font-size:13px;
+  font-weight:600;
+  border-radius:var(--radius-el);
+  cursor:pointer;
+  font-family:var(--font-body);
+  transition:filter .12s ease, transform .05s ease, border-radius .25s ease;
+}
+.btn:active{transform:translateY(1px);}
+.btn.primary{background:var(--accent); border-color:var(--accent); color:#fff; box-shadow:var(--accent-glow);}
+.btn.danger{background:var(--accent-soft); border-color:var(--line); color:var(--danger);}
+
+.footer-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:12px;
+  font-size:12px;
+  color:var(--off);
+}
+
+/* =========================================================
+   GUIDES
+   ========================================================= */
+.guide{
+  margin-top:20px;
+  padding-top:18px;
+  border-top:var(--border-w) solid var(--line);
+}
+.guide h2{
+  font-family:var(--font-display);
+  font-size:15px;
+  margin:0 0 12px;
+  color:var(--accent-dark);
+  text-transform:var(--heading-transform);
+  letter-spacing:var(--heading-tracking);
+}
+.guide-empty{ margin:0; font-size:13px; color:var(--off); }
+.guide-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.guide table{ width:100%; border-collapse:collapse; font-size:13px; }
+.guide caption{ text-align:left; font-weight:600; font-size:12.5px; color:var(--ink); padding-bottom:6px; }
+.guide th{ text-align:left; font-size:11.5px; color:var(--off); font-weight:600; padding:5px 8px; border-bottom:1px solid var(--line); }
+.guide td{ padding:5px 8px; border-bottom:1px solid var(--line); color:var(--ink); }
+.guide kbd{
+  display:inline-block;
+  background:var(--accent-soft);
+  color:var(--accent-dark);
+  border-radius:5px;
+  padding:1px 7px;
+  font-family:var(--font-mono);
+  font-size:12px;
+}
+.guide-example{ margin:14px 0 0; font-size:13px; color:var(--ink); }
+.guide-example code{
+  background:var(--accent-soft);
+  padding:1px 6px;
+  border-radius:5px;
+  font-family:var(--font-mono);
+}
+
+/* =========================================================
+   SETTINGS (theme picker)
+   ========================================================= */
+.settings-wrap{ position:relative; }
+
+.icon-btn{
+  border:var(--border-w) solid var(--line);
+  background:var(--paper);
+  color:var(--ink);
+  width:36px;
+  height:36px;
+  border-radius:var(--radius-el);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:background .15s ease, transform .3s ease, border-radius .25s ease;
+}
+.icon-btn:hover{ color:var(--accent); }
+.icon-btn.spin svg{ transform:rotate(45deg); transition:transform .3s ease; }
+
+.panel{
+  position:absolute;
+  right:0;
+  top:calc(100% + 8px);
+  width:280px;
+  background:var(--paper);
+  border:var(--border-w) solid var(--line);
+  border-radius:var(--radius-el);
+  box-shadow:0 20px 50px -20px rgba(0,0,0,.35);
+  padding:14px;
+  z-index:30;
+}
+.panel-title{
+  margin:0 0 10px;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+  color:var(--off);
+}
+.theme-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.theme-swatch{
+  border:var(--border-w) solid var(--line);
+  border-radius:var(--radius-el);
+  padding:10px;
+  cursor:pointer;
+  text-align:left;
+  background:none;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  transition:border-color .15s ease, transform .1s ease;
+}
+.theme-swatch:hover{ transform:translateY(-1px); }
+.theme-swatch.active{ border-color:var(--accent); border-width:2px; }
+.swatch-colors{ display:flex; gap:4px; }
+.swatch-dot{ width:14px; height:14px; border-radius:50%; border:1px solid rgba(0,0,0,.12); }
+.swatch-name{ font-size:12.5px; font-weight:600; color:var(--ink); }
+.swatch-sample{ font-size:16px; line-height:1; }
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+.toast{
+  position:fixed;
+  bottom:26px;
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:var(--ink);
+  color:var(--paper);
+  padding:9px 18px;
+  border-radius:999px;
+  font-size:13px;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .18s ease, transform .18s ease;
+  z-index:50;
+}
+.toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width:900px){
+  .card{ width:94vw; }
+}
+@media (max-width:600px){
+  .guide-grid{ grid-template-columns:1fr; }
+}
+@media (max-width:480px){
+  .card{ padding:20px 16px; }
+  h1{ font-size:22px; }
+  .row{ flex-direction:column; align-items:stretch; }
+  .tools{ justify-content:flex-start; }
+  .panel{ width:calc(100vw - 64px); right:-4px; }
+}

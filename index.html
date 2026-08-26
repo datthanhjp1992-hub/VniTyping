@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="sen">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đánh Tiếng Việt</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="card">
+    <header>
+      <div class="title-block">
+        <h1>Đánh Tiếng Việt</h1>
+        <span class="sub">Gõ Telex · VNI · VIQR ngay trong trình duyệt</span>
+      </div>
+
+      <div class="settings-wrap">
+        <button class="icon-btn" id="btnSettings" aria-label="Cài đặt giao diện" title="Cài đặt giao diện">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+
+        <div class="panel" id="themePanel" hidden>
+          <p class="panel-title">Giao diện</p>
+          <div class="theme-grid" id="themeGrid">
+            <!-- theme swatch buttons injected by app.js -->
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <textarea id="editor" placeholder="Nhập văn bản của bạn..." spellcheck="false"></textarea>
+
+    <div class="row">
+      <div class="seg" id="modeSeg">
+        <button data-mode="0" id="modeOff">OFF</button>
+        <button data-mode="2" id="modeTelex">TELEX</button>
+        <button data-mode="3" id="modeViqr">VIQR</button>
+        <button data-mode="1" id="modeVni">VNI</button>
+      </div>
+      <div class="tools">
+        <button class="btn" id="btnSelectAll">Select All</button>
+        <button class="btn primary" id="btnCopy">Copy</button>
+        <button class="btn danger" id="btnClear">Clear</button>
+      </div>
+    </div>
+
+    <div class="footer-row">
+      <span id="charCount">0 ký tự</span>
+      <span id="modeLabel">Chế độ: TELEX</span>
+    </div>
+
+    <div class="guide" id="guideOff">
+      <p class="guide-empty">Bộ gõ đang tắt — chọn TELEX, VIQR hoặc VNI ở trên để xem hướng dẫn.</p>
+    </div>
+
+    <div class="guide" id="guideTelex" hidden>
+      <h2>Cách gõ TELEX</h2>
+      <div class="guide-grid">
+        <table>
+          <caption>Dấu thanh</caption>
+          <tr><th>Phím</th><th>Dấu</th><th>Ví dụ</th></tr>
+          <tr><td><kbd>s</kbd></td><td>sắc</td><td>as → á</td></tr>
+          <tr><td><kbd>f</kbd></td><td>huyền</td><td>af → à</td></tr>
+          <tr><td><kbd>r</kbd></td><td>hỏi</td><td>ar → ả</td></tr>
+          <tr><td><kbd>x</kbd></td><td>ngã</td><td>ax → ã</td></tr>
+          <tr><td><kbd>j</kbd></td><td>nặng</td><td>aj → ạ</td></tr>
+          <tr><td><kbd>z</kbd></td><td>xoá dấu thanh</td><td>asz → a</td></tr>
+        </table>
+        <table>
+          <caption>Chữ có dấu mũ / móc / gạch</caption>
+          <tr><th>Gõ</th><th>Ra</th></tr>
+          <tr><td>aa</td><td>â</td></tr>
+          <tr><td>aw</td><td>ă</td></tr>
+          <tr><td>ee</td><td>ê</td></tr>
+          <tr><td>oo</td><td>ô</td></tr>
+          <tr><td>ow / w</td><td>ơ</td></tr>
+          <tr><td>uw / w</td><td>ư</td></tr>
+          <tr><td>dd</td><td>đ</td></tr>
+        </table>
+      </div>
+      <p class="guide-example">Ví dụ: <code>chaof</code> → <strong>chào</strong>, <code>vieetj</code> → <strong>việt</strong>, <code>tieengs</code> → <strong>tiếng</strong></p>
+    </div>
+
+    <div class="guide" id="guideViqr" hidden>
+      <h2>Cách gõ VIQR</h2>
+      <div class="guide-grid">
+        <table>
+          <caption>Dấu thanh</caption>
+          <tr><th>Phím</th><th>Dấu</th><th>Ví dụ</th></tr>
+          <tr><td><kbd>'</kbd></td><td>sắc</td><td>a' → á</td></tr>
+          <tr><td><kbd>`</kbd></td><td>huyền</td><td>a` → à</td></tr>
+          <tr><td><kbd>?</kbd></td><td>hỏi</td><td>a? → ả</td></tr>
+          <tr><td><kbd>~</kbd></td><td>ngã</td><td>a~ → ã</td></tr>
+          <tr><td><kbd>.</kbd></td><td>nặng</td><td>a. → ạ</td></tr>
+          <tr><td><kbd>=</kbd></td><td>xoá dấu thanh</td><td>a'= → a</td></tr>
+        </table>
+        <table>
+          <caption>Chữ có dấu mũ / móc / gạch</caption>
+          <tr><th>Gõ</th><th>Ra</th></tr>
+          <tr><td>a^</td><td>â</td></tr>
+          <tr><td>a(</td><td>ă</td></tr>
+          <tr><td>e^</td><td>ê</td></tr>
+          <tr><td>o^</td><td>ô</td></tr>
+          <tr><td>o+</td><td>ơ</td></tr>
+          <tr><td>u+</td><td>ư</td></tr>
+          <tr><td>dd</td><td>đ</td></tr>
+        </table>
+      </div>
+      <p class="guide-example">Ví dụ: <code>cha`o</code> → <strong>chào</strong>, <code>vie^.t</code> → <strong>việt</strong>, <code>tie^'ng</code> → <strong>tiếng</strong></p>
+    </div>
+
+    <div class="guide" id="guideVni" hidden>
+      <h2>Cách gõ VNI</h2>
+      <div class="guide-grid">
+        <table>
+          <caption>Dấu thanh</caption>
+          <tr><th>Phím</th><th>Dấu</th><th>Ví dụ</th></tr>
+          <tr><td><kbd>1</kbd></td><td>sắc</td><td>a1 → á</td></tr>
+          <tr><td><kbd>2</kbd></td><td>huyền</td><td>a2 → à</td></tr>
+          <tr><td><kbd>3</kbd></td><td>hỏi</td><td>a3 → ả</td></tr>
+          <tr><td><kbd>4</kbd></td><td>ngã</td><td>a4 → ã</td></tr>
+          <tr><td><kbd>5</kbd></td><td>nặng</td><td>a5 → ạ</td></tr>
+          <tr><td><kbd>0</kbd></td><td>xoá dấu thanh</td><td>a10 → a</td></tr>
+        </table>
+        <table>
+          <caption>Chữ có dấu mũ / móc / gạch</caption>
+          <tr><th>Gõ</th><th>Ra</th></tr>
+          <tr><td>a6</td><td>â</td></tr>
+          <tr><td>a8</td><td>ă</td></tr>
+          <tr><td>e6</td><td>ê</td></tr>
+          <tr><td>o6</td><td>ô</td></tr>
+          <tr><td>o7</td><td>ơ</td></tr>
+          <tr><td>u7</td><td>ư</td></tr>
+          <tr><td>d9</td><td>đ</td></tr>
+        </table>
+      </div>
+      <p class="guide-example">Ví dụ: <code>cha2o</code> → <strong>chào</strong>, <code>vie65t</code> → <strong>việt</strong>, <code>tie61ng</code> → <strong>tiếng</strong></p>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="vntyping.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
