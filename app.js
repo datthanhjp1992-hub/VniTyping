@@ -4,13 +4,12 @@
   var editor = document.getElementById('editor');
 
   // ---------------------------------------------------------------
-  // BUG FIX for the vntyping.js engine:
-  // Its Freeze() function only allows typing on elements whose id is
-  // listed in VNTYPING.VNID. Left empty (the default), it freezes
-  // (blocks) every field, so nothing ever gets accented. Whitelisting
-  // our textarea's id here is what actually turns typing on.
+  // Bộ gõ: ukengine.js — viết lại thuật toán của UniKey 3.62.
+  // Engine chỉ làm việc thuần Unicode và trả về { backs, text };
+  // UkEngine.attach() lo phần gắn vào <textarea> (keydown + setRangeText).
   // ---------------------------------------------------------------
-  VNTYPING.VNID = ['editor'];
+  var engine = new UkEngine({ method: UkEngine.TELEX });
+  UkEngine.attach(editor, engine);
 
   // =================================================================
   // THEMES
@@ -74,45 +73,60 @@
   setTheme(savedTheme);
 
   // =================================================================
-  // TYPING MODE (OFF / VNI / TELEX / VIQR) + matching guide
-  // engine's internal method values: 0=OFF, 1=VNI, 2=TELEX, 3=VIQR
+  // TYPING MODE (OFF / TELEX / VNI / VIQR) + matching guide
+  // UkEngine method values: 0=TELEX, 1=VNI, 2=VIQR. We use -1 for OFF.
   // =================================================================
+  var MODE_OFF = -1;
   var modeButtons = {
-    0: document.getElementById('modeOff'),
-    2: document.getElementById('modeTelex'),
-    3: document.getElementById('modeViqr'),
-    1: document.getElementById('modeVni')
+    '-1': document.getElementById('modeOff'),
+    '0': document.getElementById('modeTelex'),
+    '2': document.getElementById('modeViqr'),
+    '1': document.getElementById('modeVni')
   };
-  var modeNames = { 0: 'OFF', 1: 'VNI', 2: 'TELEX', 3: 'VIQR' };
+  var modeNames = { '-1': 'OFF', '0': 'TELEX', '1': 'VNI', '2': 'VIQR' };
   var guideByMode = {
-    0: document.getElementById('guideOff'),
-    2: document.getElementById('guideTelex'),
-    3: document.getElementById('guideViqr'),
-    1: document.getElementById('guideVni')
+    '-1': document.getElementById('guideOff'),
+    '0': document.getElementById('guideTelex'),
+    '2': document.getElementById('guideViqr'),
+    '1': document.getElementById('guideVni')
   };
+  var MODE_STORAGE_KEY = 'dtv_mode';
 
   function setMode(n) {
-    VNTYPING.SetMethod(n);
+    if (n === MODE_OFF) {
+      engine.setEnabled(false);
+    } else {
+      engine.setMethod(n);
+      engine.setEnabled(true);
+    }
+
     Object.keys(modeButtons).forEach(function (k) {
       modeButtons[k].classList.remove('active', 'is-off');
     });
-    modeButtons[n].classList.add('active');
-    if (n === 0) modeButtons[n].classList.add('is-off');
-    document.getElementById('modeLabel').textContent = 'Chế độ: ' + modeNames[n];
+    modeButtons[String(n)].classList.add('active');
+    if (n === MODE_OFF) modeButtons[String(n)].classList.add('is-off');
+    document.getElementById('modeLabel').textContent = 'Chế độ: ' + modeNames[String(n)];
 
     Object.keys(guideByMode).forEach(function (k) {
       guideByMode[k].hidden = (parseInt(k, 10) !== n);
     });
+
+    try { localStorage.setItem(MODE_STORAGE_KEY, String(n)); } catch (e) { /* ignore */ }
   }
 
   Object.keys(modeButtons).forEach(function (k) {
     modeButtons[k].addEventListener('click', function () {
       setMode(parseInt(k, 10));
+      editor.focus();
     });
   });
 
-  setMode(2); // default: Telex, matching the reference tool
-  // the engine auto-attaches to the document ~1s after load (see VNTYPING.Activate in vntyping.js)
+  var savedMode = 0; // mặc định: Telex
+  try {
+    var m = localStorage.getItem(MODE_STORAGE_KEY);
+    if (m !== null && modeButtons[m]) savedMode = parseInt(m, 10);
+  } catch (e) { /* ignore */ }
+  setMode(savedMode);
 
   // =================================================================
   // TOOLBAR
@@ -138,7 +152,7 @@
 
   document.getElementById('btnClear').addEventListener('click', function () {
     editor.value = '';
-    VNTYPING.ClearBuffer();
+    engine.clearBuf();
     updateCount();
     editor.focus();
   });

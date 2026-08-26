@@ -35,9 +35,9 @@
 
     <div class="row">
       <div class="seg" id="modeSeg">
-        <button data-mode="0" id="modeOff">OFF</button>
-        <button data-mode="2" id="modeTelex">TELEX</button>
-        <button data-mode="3" id="modeViqr">VIQR</button>
+        <button data-mode="-1" id="modeOff">OFF</button>
+        <button data-mode="0" id="modeTelex">TELEX</button>
+        <button data-mode="2" id="modeViqr">VIQR</button>
         <button data-mode="1" id="modeVni">VNI</button>
       </div>
       <div class="tools">
@@ -76,12 +76,13 @@
           <tr><td>aw</td><td>ă</td></tr>
           <tr><td>ee</td><td>ê</td></tr>
           <tr><td>oo</td><td>ô</td></tr>
-          <tr><td>ow / w</td><td>ơ</td></tr>
-          <tr><td>uw / w</td><td>ư</td></tr>
+          <tr><td>ow / [</td><td>ơ</td></tr>
+          <tr><td>uw / w / ]</td><td>ư</td></tr>
           <tr><td>dd</td><td>đ</td></tr>
         </table>
       </div>
       <p class="guide-example">Ví dụ: <code>chaof</code> → <strong>chào</strong>, <code>vieetj</code> → <strong>việt</strong>, <code>tieengs</code> → <strong>tiếng</strong></p>
+      <p class="guide-example">Cụm <strong>ươ</strong> cần hai lần <kbd>w</kbd>: <code>cuwowngf</code> → <strong>cường</strong> (hoặc gõ dấu ở cuối: <code>cuongwwf</code>)</p>
     </div>
 
     <div class="guide" id="guideViqr" hidden>
@@ -143,7 +144,7 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="vntyping.js"></script>
+  <script src="ukengine.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
