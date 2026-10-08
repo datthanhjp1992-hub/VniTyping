@@ -2,7 +2,7 @@
 
 Bộ gõ tiếng Việt chạy hoàn toàn trong trình duyệt. Hỗ trợ ba kiểu gõ **Telex**, **VNI**, **VIQR**, không cần cài đặt, không cần máy chủ, không gửi dữ liệu đi đâu cả.
 
-Engine được **Nguyễn Thành Đạt** viết lại bằng JavaScript thuần, dựa trên việc tham khảo mã nguồn của **UniKey 3.62** — bộ gõ tiếng Việt kinh điển trên Windows của tác giả **Phạm Kim Long**.
+Engine được **Nguyễn Thành Đạt** viết bằng JavaScript thuần. Bản đầu tiên là bản port từ mã nguồn **UniKey 3.62** (bộ gõ tiếng Việt kinh điển trên Windows của tác giả **Phạm Kim Long**). Bản hiện tại (v2) được thiết kế lại theo hướng lấy âm tiết làm trung tâm, vẫn kế thừa bảng dữ liệu và ý tưởng của UniKey.
 
 ---
 
@@ -28,13 +28,15 @@ Có thêm chế độ **OFF** để tắt bộ gõ, phím đi thẳng vào ô nh
 
 ### Đặt dấu thông minh
 
-Engine không tra bảng "chuỗi phím → kết quả" mà giữ một buffer từ đang gõ dở, rồi tự tìm đúng ký tự cần sửa. Nhờ vậy:
+Engine giữ chuỗi phím của từ đang gõ. Mỗi lần có phím mới, cả từ được tính lại từ đầu: phụ âm đầu, vần, dấu phụ, dấu thanh. Nhờ vậy:
 
-- **Bỏ dấu tự do** — gõ dấu ở cuối từ vẫn nhảy đúng chỗ: `chaof` → chào, `chaifo`... đều ra kết quả đúng.
-- **Đúng luật tiếng Việt** — `quaf` → quà, `giaf` → già, `nguyeexn` → nguyễn, `hoangf` → hoàng.
-- **Gõ lại để huỷ** — `as` → á, gõ thêm `s` nữa thành `as`; `asz` → a.
-- **Tự động tắt cho từ tiếng Anh** — gõ xen kẽ tiếng Anh không bị bộ gõ can thiệp.
+- **Bỏ dấu ở đâu cũng được, dấu luôn nằm đúng chỗ** — `chaof`, `chafo` → chào; `hoafn` → hoàn; `nguyenxe` → nguyễn.
+- **Đúng luật tiếng Việt** — `quaf` → quà, `giaf` → già, `gif` → gì, `ngoaif` → ngoài.
+- **`ươ` chỉ cần một phím** — `huowng` → hương, `nguoiwf` → người (VNI: `nguoi72`).
+- **Tự giữ nguyên từ tiếng Anh** — `google`, `address`, `windows`, `user`, `text` không bị bộ gõ phá. Engine kiểm tra từ có phải âm tiết tiếng Việt hợp lệ không, nếu không thì trả lại đúng các phím đã gõ.
+- **Gõ lại để huỷ** — `as` → á, gõ thêm `s` thành `as`; `asz` → a; `ww` → w.
 - **Giữ nguyên chữ hoa** — `DDATJ` → ĐẠT, `Vieetj Nam` → Việt Nam.
+- **Không bao giờ lệch với ô nhập** — trước mỗi phím, engine đọc lại từ đứng trước con trỏ. Ctrl+Z, dán văn bản, click chuột hay Backspace đều không làm xoá nhầm chữ.
 
 ### Giao diện
 
@@ -78,10 +80,11 @@ Các tuỳ chọn:
 
 ```js
 new UkEngine({
-  method: UkEngine.TELEX,   // TELEX | VNI | VIQR
-  freeMarking: true,        // bỏ dấu tự do (mặc định bật)
-  modernStyle: false,       // true → hoà, thuỷ | false → hòa, thủy
-  toneNextToVowel: false,   // buộc gõ dấu ngay sau nguyên âm
+  method: UkEngine.TELEX,   // TELEX | VNI | VIQR | VIQR_STAR
+  freeMarking: true,        // bỏ dấu tự do; false = dấu phải gõ ngay sau nguyên âm
+  modernStyle: true,        // true → hoà, khoẻ, thuỷ | false → hòa, khỏe, thủy
+  autoRestore: true,        // giữ nguyên từ không phải tiếng Việt (google, address…)
+  hornUO: true,             // uo + w → ươ
   macroEnabled: false       // bật gõ tắt
 });
 ```
@@ -93,7 +96,13 @@ engine.setMacros({ vn: 'Việt Nam', hn: 'Hà Nội' });
 engine.setOption('macroEnabled', true);
 ```
 
-Nếu cần dùng ở môi trường khác (Node, React, Vue…), engine cũng có API cấp thấp trả về `{ backs, text }`: xoá lùi `backs` ký tự rồi chèn `text`.
+Nếu cần dùng ở môi trường khác (Node, React, Vue…), engine có API cấp thấp:
+
+```js
+engine.ensureSync(textBeforeCaret); // đồng bộ với văn bản trước con trỏ (nên gọi trước mỗi phím)
+var r = engine.process('s');        // → { backs, text }: xoá lùi `backs` ký tự rồi chèn `text`
+var end = engine.endWord();         // gọi khi Enter / Tab: chốt từ (trả lại tiếng Anh, gõ tắt)
+```
 
 ---
 
@@ -104,8 +113,11 @@ Nếu cần dùng ở môi trường khác (Node, React, Vue…), engine cũng c
 ├── style.css       # design tokens + 4 bộ theme
 ├── app.js          # gắn kết UI: đổi theme, đổi kiểu gõ, toolbar
 ├── ukengine.js     # ★ engine bộ gõ (độc lập, không phụ thuộc gì)
-├── test.js         # 64 test cho engine  (node test.js)
-├── tech.md         # ghi chép mổ xẻ source UniKey 3.62
+├── tests/
+│   ├── cases.json  # bộ test dùng chung (cũng dùng cho bản C# sau này)
+│   └── run.js      # chạy test: node tests/run.js
+├── tech.md         # ghi chép mổ xẻ UniKey 3.62 và thiết kế engine v2
+├── COPYING         # toàn văn GPL v2
 └── README.md
 ```
 
@@ -114,21 +126,23 @@ Nếu cần dùng ở môi trường khác (Node, React, Vue…), engine cũng c
 ## Kiểm thử
 
 ```bash
-node test.js
+node tests/run.js
 ```
 
-64 trường hợp cho cả ba kiểu gõ: đặt dấu thanh, dấu mũ/trăng/móc, gõ lại để huỷ, chữ hoa, Backspace, gõ tắt.
+224 trường hợp cho TELEX, VNI, VIQR, VIQR\*: đặt và dời dấu thanh, dấu mũ/trăng/móc, `ươ`, giữ nguyên tiếng Anh, gõ lại để huỷ, chữ hoa, Backspace, dán văn bản, Enter, gõ tắt và các tuỳ chọn.
+
+Mỗi ca mô phỏng đúng một ô nhập: gõ từng phím, áp `{ backs, text }`, và có thể chèn `{BS}`, `{ENTER}`, `{PASTE:...}` vào giữa.
 
 ---
 
 ## Vài lưu ý về hành vi
 
-Engine bám sát UniKey gốc, nên có hai điểm khác với một số bộ gõ đời sau:
+- **Kiểu dấu mặc định là kiểu mới**: `hoaf` → hoà, `thuyr` → thuỷ. Muốn ra `hòa`, `thủy` thì đặt `modernStyle: false`.
+- **Từ tiếng Anh trùng âm tiết tiếng Việt** vẫn bị gõ thành tiếng Việt, ví dụ `see` → sê, `box` → bõ. Đây là giới hạn chung của mọi bộ gõ Telex; khi cần gõ nhiều tiếng Anh thì chuyển sang OFF.
+- **VIQR** dùng `.` `?` `'` làm dấu thanh nên `chao.` sẽ thành `chạo`. Gõ `chao\.` để ra `chao.`.
+- **Khác với UniKey gốc**: dấu thanh tự dời chỗ, `ươ` chỉ cần một `w`, có kiểm tra chính tả. Không còn chế độ "UniKey cổ điển".
 
-- **`hoaf` → hòa** (mặc định). Muốn ra `hoà` thì bật `modernStyle: true` — tương ứng tuỳ chọn "Bỏ dấu kiểu mới (oà, uý)" trong UniKey.
-- **Cụm `ươ` cần hai lần `w`**: gõ `cuwowngf` → cường, hoặc bỏ dấu ở cuối `cuongwwf`. Một phím `w` chỉ sửa được một ký tự — đúng như thiết kế gốc.
-
-Chi tiết vì sao, xem [`tech.md`](tech.md).
+Chi tiết thiết kế, xem [`tech.md`](tech.md).
 
 ---
 
@@ -136,7 +150,7 @@ Chi tiết vì sao, xem [`tech.md`](tech.md).
 
 ### Thuật toán gốc
 
-Thuật toán bộ gõ trong `ukengine.js` được viết lại từ **UniKey 3.62**:
+Bản đầu tiên của `ukengine.js` được viết lại từ **UniKey 3.62**. Bản v2 thiết kế lại thuật toán nhưng vẫn kế thừa bảng dữ liệu và ý tưởng từ đó:
 
 > **UniKey — Vietnamese Keyboard for Windows**
 > Copyright © 1998–2002 **Phạm Kim Long**
@@ -148,9 +162,9 @@ Xin gửi lời cảm ơn chân thành tới tác giả Phạm Kim Long. UniKey 
 
 ### Dự án này
 
-`ukengine.js` là **bản viết lại bằng JavaScript** do **Nguyễn Thành Đạt** thực hiện, sau khi tham khảo và nghiên cứu mã nguồn UniKey 3.62 của anh Phạm Kim Long. Toàn bộ cấu trúc bảng dữ liệu, cách đóng gói thuộc tính vào bit, và các quy tắc đặt dấu đều bám sát bản gốc; phần viết mới là việc chuyển từ C++/TCVN3 sang JavaScript/Unicode và phần gắn kết với trình duyệt.
+`ukengine.js` do **Nguyễn Thành Đạt** viết bằng JavaScript, sau khi tham khảo và nghiên cứu mã nguồn UniKey 3.62 của anh Phạm Kim Long. Bản v1 bám sát cấu trúc của bản gốc. Bản v2 thiết kế lại theo hướng lấy âm tiết làm trung tâm, nhưng vẫn dùng bảng nguyên âm và các quy tắc đặt dấu kế thừa từ UniKey.
 
-Vì bản JS bám sát mã nguồn gốc như vậy, dự án này được phát hành theo cùng giấy phép mà anh Long đã chọn cho UniKey: **GNU General Public License version 2, hoặc (tuỳ người dùng chọn) bất kỳ phiên bản nào mới hơn**.
+Vì vậy dự án này được phát hành theo cùng giấy phép mà anh Long đã chọn cho UniKey: **GNU General Public License version 2, hoặc (tuỳ người dùng chọn) bất kỳ phiên bản nào mới hơn**.
 
 > *Ghi chú:* cụm "hoặc bất kỳ phiên bản nào mới hơn" kế thừa từ chính header mã nguồn UniKey. Nó cho phép người dùng lại dự án này được tự chọn tuân theo GPL v2, v3 hay các phiên bản sau, thay vì bị bó buộc vào đúng v2.
 
@@ -185,9 +199,9 @@ Thuật toán gốc thuộc về anh **Phạm Kim Long** — xem phần [Bản q
 
 ## Hướng phát triển
 
-- [ ] Bổ sung kiểu gõ **VIQR\*** (dùng `*` thay `+`)
+- [x] Engine v2: dời dấu thanh, `ươ` một phím, giữ nguyên tiếng Anh, đồng bộ với ô nhập
+- [x] Kiểu gõ **VIQR\*** (dùng `*` thay `+`) trong engine
+- [ ] Ứng dụng Windows portable (C# WinForms) dùng chung bộ test
 - [ ] Xuất ra các bảng mã khác: TCVN3, VNI-Windows, NCR
 - [ ] Hỗ trợ `contenteditable` bên cạnh `<textarea>` / `<input>`
 - [ ] Bảng gõ tắt cho người dùng tự cấu hình, lưu trong `localStorage`
-- [ ] Tuỳ chọn luật hiện đại `uo` + `w` → `ươ`
-- [ ] Kiểm tra chính tả tiếng Việt khi gõ

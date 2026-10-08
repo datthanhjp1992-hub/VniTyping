@@ -2,6 +2,8 @@
 
 > Ghi chép trong quá trình đọc source, phục vụ việc viết lại engine bằng JavaScript.
 > Ngày: 2026-08-26
+>
+> **Cập nhật 2026-10:** mục 0–13 ghi lại cách UniKey hoạt động và bản port v1 bám theo nó. `ukengine.js` hiện tại là **v2**, thiết kế lại theo hướng lấy âm tiết làm trung tâm — xem [mục 14](#14-engine-v2--lấy-âm-tiết-làm-trung-tâm).
 
 ---
 
@@ -308,7 +310,7 @@ Nếu sau này cần xuất TCVN3 / VNI / NCR thì chỉ cần thêm một hàm 
 
 ## 11. Kiểm chứng
 
-Bộ test `test.js` chạy 64 ca, đối chiếu hành vi mong đợi của UniKey, đều đạt. Vài ca đáng chú ý:
+Bộ test của v1 (`test.js`, 64 ca, nay đã thay bằng `tests/`) đối chiếu hành vi mong đợi của UniKey. Vài ca đáng chú ý của v1:
 
 | Kiểu | Gõ | Ra |
 |---|---|---|
@@ -355,3 +357,79 @@ Bộ test `test.js` chạy 64 ca, đối chiếu hành vi mong đợi của UniK
 * [ ] Hỗ trợ `contenteditable` bên cạnh `<textarea>`/`<input>`.
 * [ ] Kiểm tra chính tả kiểu `Speller` (bộ gõ trong `vntyping.js` của dự án hiện tại có, UniKey 3.62 thì không).
 * [ ] Thêm luật `uo + w → ươ` như các bộ gõ hiện đại (đây là **cải tiến**, không còn giống UniKey gốc nữa — nên để sau một tuỳ chọn).
+
+---
+
+## 14. Engine v2 — lấy âm tiết làm trung tâm
+
+### Vì sao viết lại
+
+Chạy bộ test mới trên v1 thì chỉ 166/224 ca đạt. Các lỗi đều có chung một gốc: v1 **sửa tại chỗ từng ký tự** trong buffer và không biết đâu là vần, đâu là phụ âm cuối.
+
+| Gõ | v1 | v2 | Nguyên nhân ở v1 |
+|---|---|---|---|
+| `hoafn` | hòan | hoàn | dấu đã đặt thì không dời khi gõ thêm phụ âm cuối |
+| `nguyenxe` | nguỹên | nguyễn | dấu không dời khi thêm dấu mũ sau |
+| `huowng` | huơng | hương | một phím `w` chỉ sửa một ký tự |
+| `nguoi72` (VNI) | ngừoi | người | như trên |
+| `google` | gôgle | google | không có kiểm tra chính tả |
+| `windows` | ưindớ | windows | như trên |
+| Ctrl+Z rồi gõ dấu | xoá nhầm chữ | đúng | buffer riêng bị lệch với ô nhập |
+
+### Mô hình dữ liệu
+
+Từ đang gõ là một mảng **chữ**, mỗi chữ gồm `{ b: chữ gốc a–z, m: dấu phụ, up: hoa/thường }`, cộng **một** dấu thanh cho cả từ. Dấu phụ là một trong `NONE, HAT (â ê ô), BREVE (ă), HORN (ơ ư), STROKE (đ)`.
+
+Dấu thanh không gắn vào ký tự nào. Mỗi lần hiển thị, `tonePosition()` tính lại vị trí:
+
+1. Cụm nguyên âm có chữ mang dấu phụ → dấu vào chữ đó (`ươ` → vào `ơ`).
+2. Một nguyên âm → vào chính nó. Ba nguyên âm → vào chữ giữa.
+3. Hai nguyên âm: có phụ âm cuối → chữ thứ hai (`hoàn`); `oa/oe/uy` ở kiểu mới → chữ thứ hai (`hoà`); còn lại → chữ thứ nhất (`mùa`).
+4. `qu` và `gi` được tách vào phụ âm đầu trước khi xét (`quà`, `già`), nhưng `gì`, `gìn` vẫn đúng vì engine thử cả hai cách tách.
+
+### Mỗi phím: tính lại cả từ rồi so chuỗi
+
+```
+phím → actionOf(kiểu gõ, phím) → { tone | hat | horn | breve | w | stroke | short | escape } hoặc null
+     → _apply(): thử áp lên mảng chữ; nếu kết quả không còn là âm tiết hợp lệ thì bỏ, coi phím là chữ thường
+     → _render(): dựng lại chuỗi hiển thị
+     → diff(chuỗi cũ, chuỗi mới) → { backs, text }
+```
+
+Kiểu gõ chỉ là bảng ánh xạ "phím → hành động", lõi engine không biết đang là TELEX hay VNI. Bảng thuộc tính đóng gói bit `DT[]` của v1 không còn cần nữa.
+
+### Kiểm tra chính tả
+
+`validParse()` tách từ thành phụ âm đầu + vần + phụ âm cuối rồi đối chiếu:
+
+- 27 phụ âm đầu (`b c ch d đ g gh gi h k kh l m n ng ngh nh p ph qu r s t th tr v x`);
+- khoảng 160 vần hợp lệ (mảng `RIMES`);
+- luật `c/k`, `gh/ngh` chỉ đứng trước `e ê i (y)`;
+- phụ âm cuối `c ch p t` chỉ đi với sắc, nặng hoặc không dấu.
+
+Có hai mức: **đang gõ dở** (chữ chưa có dấu phụ được coi là còn có thể thêm, ví dụ `tie` còn có thể thành `tiê`) và **hoàn chỉnh** (khi gõ dấu cách, dấu câu hoặc Enter).
+
+- Khi gõ một chữ làm từ không còn hợp lệ, nếu từ đã từng được biến đổi thì trả lại nguyên văn các phím: `goog` → `gôg` không hợp lệ → hiện `goog`.
+- Khi kết thúc từ mà từ không hoàn chỉnh thì cũng trả lại nguyên văn: `user` → `ủe` → gõ dấu cách → `user`.
+- Trước khi kiểm tra hoàn chỉnh, `ươ` đứng cuối từ được chuẩn hoá thành `uơ` (`thuowr` → thuở).
+
+### `ươ` với một phím
+
+- Phím `w` (hoặc `7`, `+`) thử lần lượt các ứng viên: cặp `uo` (trừ sau `q`) → `ươ`; sau đó từng nguyên âm `u o a` từ phải sang trái. Ứng viên đầu tiên cho ra âm tiết hợp lệ được chọn, vì vậy `muaw` → mưa (không phải muă), `cuuw` → cưu.
+- Nếu `u` đã có móc rồi mới gõ `o` (`nguwo`), engine tự nâng thành `ươ`, vì `ưo` không phải vần tiếng Việt. Phím `w` gõ sau đó chỉ xác nhận, nên cách gõ cũ `nguwowif` vẫn ra người.
+
+### Đồng bộ với ô nhập
+
+v2 không giữ buffer riêng làm nguồn sự thật. Trước mỗi phím, `ensureSync(văn bản trước con trỏ)` so từ đứng trước con trỏ với chuỗi engine đang hiển thị. Nếu khác (do Undo, dán, click chuột, Backspace...) thì nạp lại từ văn bản. Văn bản nạp lại được giữ làm "nguyên văn" khi cần trả lại: dán `việt` rồi gõ `x` cho ra `việtx`, không bị đổi thành phím Telex.
+
+`attach()` dùng `document.execCommand('insertText')` nên lịch sử Ctrl+Z của trình duyệt vẫn hoạt động. Trình duyệt nào không hỗ trợ thì engine quay về `setRangeText`.
+
+### Bộ test dùng chung
+
+`tests/cases.json` chứa 224 ca, chia nhóm theo kiểu gõ và tuỳ chọn. `tests/run.js` mô phỏng một ô nhập: gõ từng phím, áp `{ backs, text }`, hỗ trợ `{BS}`, `{ENTER}`, `{PASTE:...}`. Bản C# sau này sẽ đọc cùng file này để chắc chắn hai bản cho kết quả giống hệt nhau.
+
+### Giới hạn còn lại
+
+- Từ tiếng Anh trùng âm tiết tiếng Việt (`see` → sê, `box` → bõ) không phân biệt được.
+- VIQR: `.` `?` `'` vừa là dấu thanh vừa là dấu câu; dùng `\` để gõ dấu câu ngay sau chữ.
+- Danh sách vần là dữ liệu, không phải luật. Nếu gặp một từ hợp lệ bị trả lại nguyên văn, chỉ cần thêm vần đó vào `RIMES` và thêm một ca vào `tests/cases.json`.
