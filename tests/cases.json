@@ -1,0 +1,339 @@
+[
+  {
+    "name": "TELEX: dấu thanh cơ bản",
+    "method": "telex",
+    "cases": [
+      { "input": "as", "expect": "á" },
+      { "input": "af", "expect": "à" },
+      { "input": "ar", "expect": "ả" },
+      { "input": "ax", "expect": "ã" },
+      { "input": "aj", "expect": "ạ" },
+      { "input": "asz", "expect": "a" },
+      { "input": "asf", "expect": "à" },
+      { "input": "ma", "expect": "ma" },
+      { "input": "mas", "expect": "má" },
+      { "input": "maf", "expect": "mà" },
+      { "input": "mar", "expect": "mả" },
+      { "input": "max", "expect": "mã" },
+      { "input": "maj", "expect": "mạ" },
+      { "input": "chaof", "expect": "chào" },
+      { "input": "chafo", "expect": "chào" },
+      { "input": "toans", "expect": "toán" },
+      { "input": "toasn", "expect": "toán" },
+      { "input": "cacs", "expect": "các" },
+      { "input": "banj", "expect": "bạn" },
+      { "input": "bajn", "expect": "bạn" },
+      { "input": "mootj", "expect": "một" },
+      { "input": "hai", "expect": "hai" },
+      { "input": "tamf", "expect": "tàm" },
+      { "input": "chieeuf", "expect": "chiều" },
+      { "input": "nawm", "expect": "năm" },
+      { "input": "nawmf", "expect": "nằm" }
+    ]
+  },
+  {
+    "name": "TELEX: dấu mũ, trăng, móc, đ",
+    "method": "telex",
+    "cases": [
+      { "input": "aa", "expect": "â" },
+      { "input": "aw", "expect": "ă" },
+      { "input": "ee", "expect": "ê" },
+      { "input": "oo", "expect": "ô" },
+      { "input": "ow", "expect": "ơ" },
+      { "input": "uw", "expect": "ư" },
+      { "input": "dd", "expect": "đ" },
+      { "input": "ddi", "expect": "đi" },
+      { "input": "ddaij", "expect": "đại" },
+      { "input": "DDaij", "expect": "Đại" },
+      { "input": "dduwngs", "expect": "đứng" },
+      { "input": "dduowcj", "expect": "được" },
+      { "input": "tieengs", "expect": "tiếng" },
+      { "input": "tienges", "expect": "tiếng" },
+      { "input": "vieetj", "expect": "việt" },
+      { "input": "vietej", "expect": "việt" },
+      { "input": "bieets", "expect": "biết" },
+      { "input": "muoons", "expect": "muốn" },
+      { "input": "quoocs", "expect": "quốc" },
+      { "input": "nhuwngx", "expect": "những" },
+      { "input": "chuwa", "expect": "chưa" },
+      { "input": "caaps", "expect": "cấp" },
+      { "input": "gaauf", "expect": "gầu" },
+      { "input": "khoong", "expect": "không" },
+      { "input": "thuee", "expect": "thuê" }
+    ]
+  },
+  {
+    "name": "TELEX: dời dấu thanh khi gõ thêm chữ (lỗi của v1)",
+    "method": "telex",
+    "cases": [
+      { "input": "hoafn", "expect": "hoàn" },
+      { "input": "hoanf", "expect": "hoàn" },
+      { "input": "hoafng", "expect": "hoàng" },
+      { "input": "nguyeenx", "expect": "nguyễn" },
+      { "input": "nguyenxe", "expect": "nguyễn" },
+      { "input": "nguyeexn", "expect": "nguyễn" },
+      { "input": "tiesng", "expect": "tiéng" },
+      { "input": "tiesnge", "expect": "tiếng" },
+      { "input": "muafw", "expect": "mừa" },
+      { "input": "muawf", "expect": "mừa" },
+      { "input": "thuyeenf", "expect": "thuyền" },
+      { "input": "thuyenfe", "expect": "thuyền" },
+      { "input": "khuyeenr", "expect": "khuyển" },
+      { "input": "tuyeets", "expect": "tuyết" }
+    ]
+  },
+  {
+    "name": "TELEX: ươ với một phím w (lỗi của v1)",
+    "method": "telex",
+    "cases": [
+      { "input": "huowng", "expect": "hương" },
+      { "input": "huwowng", "expect": "hương" },
+      { "input": "huongw", "expect": "hương" },
+      { "input": "thuowngf", "expect": "thường" },
+      { "input": "truwowngf", "expect": "trường" },
+      { "input": "truongwf", "expect": "trường" },
+      { "input": "cuowngf", "expect": "cường" },
+      { "input": "nguowif", "expect": "người" },
+      { "input": "nguoiwf", "expect": "người" },
+      { "input": "nguwoif", "expect": "người" },
+      { "input": "truwongf", "expect": "trường" },
+      { "input": "ruouwj", "expect": "rượu" },
+      { "input": "ruwowuj", "expect": "rượu" },
+      { "input": "giuwowngf", "expect": "giường" },
+      { "input": "giuongwf", "expect": "giường" },
+      { "input": "muowis", "expect": "mưới" },
+      { "input": "muwowif", "expect": "mười" },
+      { "input": "thuowr ", "expect": "thuở " },
+      { "input": "quow", "expect": "quơ" },
+      { "input": "muaw", "expect": "mưa" },
+      { "input": "cuuws", "expect": "cứu" },
+      { "input": "guiwr", "expect": "gửi" },
+      { "input": "hoawcj", "expect": "hoặc" }
+    ]
+  },
+  {
+    "name": "TELEX: vị trí dấu (kiểu mới, mặc định)",
+    "method": "telex",
+    "cases": [
+      { "input": "hoaf", "expect": "hoà" },
+      { "input": "khoer", "expect": "khoẻ" },
+      { "input": "thuyr", "expect": "thuỷ" },
+      { "input": "quaf", "expect": "quà" },
+      { "input": "quas", "expect": "quá" },
+      { "input": "quys", "expect": "quý" },
+      { "input": "giaf", "expect": "già" },
+      { "input": "gif", "expect": "gì" },
+      { "input": "ginf", "expect": "gìn" },
+      { "input": "giuwax", "expect": "giữa" },
+      { "input": "kiaf", "expect": "kìa" },
+      { "input": "muaf", "expect": "mùa" },
+      { "input": "ngoaif", "expect": "ngoài" },
+      { "input": "khuyur", "expect": "khuỷu" },
+      { "input": "huyfnh", "expect": "huỳnh" },
+      { "input": "xoays", "expect": "xoáy" }
+    ]
+  },
+  {
+    "name": "TELEX: vị trí dấu (kiểu cũ)",
+    "method": "telex",
+    "opts": { "modernStyle": false },
+    "cases": [
+      { "input": "hoaf", "expect": "hòa" },
+      { "input": "khoer", "expect": "khỏe" },
+      { "input": "thuyr", "expect": "thủy" },
+      { "input": "hoafn", "expect": "hoàn" }
+    ]
+  },
+  {
+    "name": "TELEX: gõ lại để huỷ",
+    "method": "telex",
+    "cases": [
+      { "input": "ass", "expect": "as" },
+      { "input": "aaa", "expect": "aa" },
+      { "input": "aww", "expect": "aw" },
+      { "input": "ddd", "expect": "dd" },
+      { "input": "ooo", "expect": "oo" },
+      { "input": "w", "expect": "ư" },
+      { "input": "ww", "expect": "w" },
+      { "input": "tw", "expect": "tư" },
+      { "input": "nhw", "expect": "như" },
+      { "input": "[", "expect": "ơ" },
+      { "input": "]", "expect": "ư" },
+      { "input": "{", "expect": "Ơ" },
+      { "input": "[[", "expect": "[" },
+      { "input": "cass ", "expect": "cas " }
+    ]
+  },
+  {
+    "name": "TELEX: chữ hoa",
+    "method": "telex",
+    "cases": [
+      { "input": "DDATJ", "expect": "ĐẠT" },
+      { "input": "VIEETJ", "expect": "VIỆT" },
+      { "input": "Vieetj Nam", "expect": "Việt Nam" },
+      { "input": "Tieengs Vieetj", "expect": "Tiếng Việt" },
+      { "input": "NGUOWIF", "expect": "NGƯỜI" },
+      { "input": "W", "expect": "Ư" },
+      { "input": "TW", "expect": "TƯ" }
+    ]
+  },
+  {
+    "name": "TELEX: câu hoàn chỉnh",
+    "method": "telex",
+    "cases": [
+      { "input": "xin chaof cacs banj", "expect": "xin chào các bạn" },
+      { "input": "Tooi laf nguowif Vieetj Nam.", "expect": "Tôi là người Việt Nam." },
+      { "input": "Em gwir lai file baos caos tuaanf nayf nhes.", "expect": "Em gửi lai file báo cáo tuần này nhé." },
+      { "input": "Chucs muwngf namw mowis!", "expect": "Chúc mừng năm mới!" },
+      { "input": "ddaay laf mootj caau hoir?", "expect": "đây là một câu hỏi?" }
+    ]
+  },
+  {
+    "name": "TELEX: trả lại từ tiếng Anh",
+    "method": "telex",
+    "cases": [
+      { "input": "address", "expect": "address" },
+      { "input": "windows", "expect": "windows" },
+      { "input": "google", "expect": "google" },
+      { "input": "facebook", "expect": "facebook" },
+      { "input": "class", "expect": "class" },
+      { "input": "thanks", "expect": "thanks" },
+      { "input": "hello", "expect": "hello" },
+      { "input": "file", "expect": "file" },
+      { "input": "text ", "expect": "text " },
+      { "input": "user ", "expect": "user " },
+      { "input": "ties ", "expect": "ties " },
+      { "input": "what", "expect": "what" },
+      { "input": "were", "expect": "were" },
+      { "input": "did", "expect": "did" },
+      { "input": "dad", "expect": "dad" },
+      { "input": "free", "expect": "free" },
+      { "input": "check", "expect": "check" },
+      { "input": "Excel", "expect": "Excel" },
+      { "input": "Please check the attached file.", "expect": "Please check the attached file." }
+    ]
+  },
+  {
+    "name": "TELEX: tắt trả lại tiếng Anh",
+    "method": "telex",
+    "opts": { "autoRestore": false },
+    "cases": [
+      { "input": "chaof", "expect": "chào" },
+      { "input": "google", "expect": "gôgle" }
+    ]
+  },
+  {
+    "name": "TELEX: tắt luật uo + w",
+    "method": "telex",
+    "opts": { "hornUO": false },
+    "cases": [
+      { "input": "huow", "expect": "huơ" },
+      { "input": "huwowng", "expect": "hương" }
+    ]
+  },
+  {
+    "name": "TELEX: Backspace, dán, Enter (đồng bộ với ô nhập)",
+    "method": "telex",
+    "cases": [
+      { "input": "tieengs{BS}g", "expect": "tiếng" },
+      { "input": "hoafn{BS}", "expect": "hoà" },
+      { "input": "hoafn{BS}n", "expect": "hoàn" },
+      { "input": "chao{BS}{BS}{BS}{BS}tooi", "expect": "tôi" },
+      { "input": "xin {PASTE:chao}f", "expect": "xin chào" },
+      { "input": "{PASTE:Viêt}j", "expect": "Việt" },
+      { "input": "{PASTE:việt}x ", "expect": "việtx " },
+      { "input": "chaof{ENTER}banj", "expect": "chào\nbạn" },
+      { "input": "user{ENTER}", "expect": "user\n" },
+      { "input": "{PASTE:abc}s", "expect": "abcs" }
+    ]
+  },
+  {
+    "name": "TELEX: gõ dấu sát nguyên âm (freeMarking = false)",
+    "method": "telex",
+    "opts": { "freeMarking": false },
+    "cases": [
+      { "input": "chafo", "expect": "chào" },
+      { "input": "toanf", "expect": "toanf" },
+      { "input": "tieengs", "expect": "tieengs" }
+    ]
+  },
+  {
+    "name": "TELEX: gõ tắt",
+    "method": "telex",
+    "macros": { "vn": "Việt Nam", "hn": "Hà Nội" },
+    "cases": [
+      { "input": "vn ", "expect": "Việt Nam ", "macros": { "vn": "Việt Nam" } },
+      { "input": "o hn.", "expect": "o Hà Nội.", "macros": { "hn": "Hà Nội" } },
+      { "input": "vnx ", "expect": "vnx ", "macros": { "vn": "Việt Nam" } }
+    ]
+  },
+  {
+    "name": "VNI",
+    "method": "vni",
+    "cases": [
+      { "input": "a1", "expect": "á" },
+      { "input": "a2", "expect": "à" },
+      { "input": "a3", "expect": "ả" },
+      { "input": "a4", "expect": "ã" },
+      { "input": "a5", "expect": "ạ" },
+      { "input": "a10", "expect": "a" },
+      { "input": "a6", "expect": "â" },
+      { "input": "a8", "expect": "ă" },
+      { "input": "o7", "expect": "ơ" },
+      { "input": "u7", "expect": "ư" },
+      { "input": "d9", "expect": "đ" },
+      { "input": "vie65t", "expect": "việt" },
+      { "input": "vie6t5", "expect": "việt" },
+      { "input": "viet65", "expect": "việt" },
+      { "input": "tie61ng", "expect": "tiếng" },
+      { "input": "cha2o", "expect": "chào" },
+      { "input": "ho2a", "expect": "hoà" },
+      { "input": "ho2an", "expect": "hoàn" },
+      { "input": "nguoi72", "expect": "người" },
+      { "input": "ngu7o7i2", "expect": "người" },
+      { "input": "huong7", "expect": "hương" },
+      { "input": "d9i", "expect": "đi" },
+      { "input": "di9", "expect": "đi" },
+      { "input": "d9a5t", "expect": "đạt" },
+      { "input": "khoe3", "expect": "khoẻ" },
+      { "input": "a11", "expect": "a1" },
+      { "input": "a66", "expect": "a6" },
+      { "input": "2024", "expect": "2024" },
+      { "input": "win10", "expect": "win10" },
+      { "input": "Windows 11", "expect": "Windows 11" },
+      { "input": "Vie65t Nam", "expect": "Việt Nam" }
+    ]
+  },
+  {
+    "name": "VIQR",
+    "method": "viqr",
+    "cases": [
+      { "input": "a'", "expect": "á" },
+      { "input": "a`", "expect": "à" },
+      { "input": "a?", "expect": "ả" },
+      { "input": "a~", "expect": "ã" },
+      { "input": "a.", "expect": "ạ" },
+      { "input": "a'0", "expect": "a" },
+      { "input": "a'=", "expect": "a" },
+      { "input": "a^", "expect": "â" },
+      { "input": "a(", "expect": "ă" },
+      { "input": "o+", "expect": "ơ" },
+      { "input": "dd", "expect": "đ" },
+      { "input": "tie^'ng", "expect": "tiếng" },
+      { "input": "vie^.t", "expect": "việt" },
+      { "input": "cha`o", "expect": "chào" },
+      { "input": "ngu+o+`i", "expect": "người" },
+      { "input": "ngu+o`i", "expect": "người" },
+      { "input": "chao\\.", "expect": "chao." },
+      { "input": "1.5", "expect": "1.5" }
+    ]
+  },
+  {
+    "name": "VIQR*",
+    "method": "viqr*",
+    "cases": [
+      { "input": "o*", "expect": "ơ" },
+      { "input": "ngu*o*`i", "expect": "người" }
+    ]
+  }
+]
